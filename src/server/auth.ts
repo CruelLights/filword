@@ -25,7 +25,11 @@ export const auth = betterAuth({
       maxAge: 60 * 5,
     },
   },
-  trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: [
+  process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
+  "https://filword-cb6f.vercel.app",
+  "https://filword-cb6f-7y99ic96t-vovavasilev490-4071s-projects.vercel.app",
+],
 });
 
 export type Session = typeof auth.$Infer.Session;
