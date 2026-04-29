@@ -7,7 +7,7 @@ import { gameRooms, gameParticipants, foundWords } from "@/server/db/schema";
 import { generateGrid } from "@/server/game/generator";
 import { validateWordSubmission } from "@/server/game/validator";
 
-const WS_INTERNAL_URL = process.env.WS_INTERNAL_URL ?? `http://localhost:${process.env.WS_PORT || 3001}`;
+const WS_INTERNAL_URL = "https://filword-production.up.railway.app";
 
 export const gameRouter = createTRPCRouter({
   start: protectedProcedure
