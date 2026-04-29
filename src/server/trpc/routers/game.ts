@@ -42,7 +42,8 @@ export const gameRouter = createTRPCRouter({
       await ctx.db.update(gameRooms)
         .set({ status: "active", grid, wordList: placements, startedAt })
         .where(eq(gameRooms.id, input.roomId));
-
+        console.log("WS_INTERNAL_URL:", process.env.WS_INTERNAL_URL);
+        console.log("Sending to:", `${WS_INTERNAL_URL}/internal/start-timer`);
       try {
         await fetch(`${WS_INTERNAL_URL}/internal/start-timer`, {
           method: "POST",
