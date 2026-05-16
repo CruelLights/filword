@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Филворд
+Филворд — многопользовательская игра для поиска слов в таблице букв. Игроки соревнуются в реальном времени, находя спрятанные слова на поле 10×10.
+Проект создан студентом группы ПП 3 курс
 
-## Getting Started
+Васильев Владимир
 
-First, run the development server:
 
-```bash
+Возможности
+
+Регистрация и вход по email
+Игровое поле 10×10 с буквами
+Выделение слов мышью в любом направлении
+Многопользовательский режим от 2 до 6 игроков
+Realtime-синхронизация найденных слов через WebSocket
+Командный режим с выбором команды
+Игра против бота с настраиваемой скоростью
+Статистика матчей и лидерборд
+Светлая и тёмная тема
+
+
+Технологии
+
+Next.js (App Router)
+TypeScript
+tRPC — типобезопасный API
+Drizzle ORM — работа с базой данных
+Better Auth — аутентификация
+PostgreSQL (Neon) — база данных
+WebSocket (ws) — realtime-синхронизация
+Tailwind CSS — стилизация
+Vitest — unit-тесты
+
+
+Структура проекта
+
+src/app — страницы и UI
+src/server — tRPC-роутеры, логика сервера, WebSocket
+src/server/db — схемы Drizzle
+src/server/game — генерация поля, валидация слов, бот
+src/server/ws — WebSocket сервер
+src/components — React-компоненты
+src/lib — клиентские утилиты
+
+
+Запуск проекта
+1. Клонировать репозиторий
+bashgit clone https://github.com/CruelLights/filword.git
+cd filword
+2. Установить зависимости
+bashnpm install --legacy-peer-deps
+3. Настроить переменные окружения
+Создать файл .env.local в корне проекта:
+envDATABASE_URL=postgresql://...
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=your-secret-key-min-32-chars
+NEXT_PUBLIC_WS_URL=ws://localhost:3001
+WS_PORT=3001
+4. Применить миграции
+bashnpm run db:push
+5. Создать пользователя для бота (в Neon SQL Editor)
+sqlINSERT INTO users (id, name, email, email_verified, created_at, updated_at)
+VALUES ('bot-player-000000000000000000000', '🤖 Бот', 'bot@filword.internal', true, NOW(), NOW())
+ON CONFLICT DO NOTHING;
+6. Запустить проект в режиме разработки
+bash# Терминал 1 — Next.js
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Терминал 2 — WebSocket сервер
+npm run ws:dev
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Тесты
+Unit-тесты (Vitest)
+bashnpm run test:run
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Деплой
 
-## Learn More
+Vercel — Next.js приложение
+Railway — WebSocket сервер
 
-To learn more about Next.js, take a look at the following resources:
+Переменные окружения для Vercel:
+envDATABASE_URL=...
+BETTER_AUTH_SECRET=...
+BETTER_AUTH_URL=https://your-app.vercel.app
+NEXT_PUBLIC_APP_URL=https://your-app.vercel.app
+NEXT_PUBLIC_WS_URL=wss://your-ws.railway.app
+WS_INTERNAL_URL=https://your-ws.railway.app
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Правила игры
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+На поле 10×10 спрятаны слова в разных направлениях
+Выдели слово мышью — зажми на первой букве и потяни до последней
+Найденное слово засчитывается тебе и блокируется для других
+Побеждает игрок (или команда) с наибольшим количеством слов к концу таймера
+При равном счёте побеждает тот, кто находил слова быстрее
